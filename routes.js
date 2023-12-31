@@ -15,7 +15,7 @@ routes.post('/task/delete/:id', authM.authMid('task_delete'), task.tDelete)
 routes.post('/task/restore/:id', authM.authMid('task_restore'), task.restore)
 routes.put('/task/assign/:id', authM.authMid('task_assign'), task.assign)
 routes.put('/task/revoke/:id', authM.authMid('task_revoke'), task.revoke)
-routes.put('/task/status/:id',authM.authMid('task_status'),task.ustatus)
+routes.put('/task/status/:id', authM.authMid('task_status'), task.ustatus)
 
 module.exports = {
     routes

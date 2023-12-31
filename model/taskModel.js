@@ -1,6 +1,7 @@
 let { Task } = require('../schema/taskSchema')
 let { User } = require('../schema/userSchema')
 let joi = require('joi')
+let { mailer } = require('../helper/mailer')
 
 async function checkCreate(data) {
     let schema = joi.object({
@@ -163,7 +164,29 @@ async function assign(id, params, userData) {
     if (!update || (update && update.error)) {
         return { error: 'Error in updating task' }
     }
-    return { data: update }
+    let mailOption = {
+        from: 'oshaik427@gmail.com',
+        to: params.email,
+        subject: "Task Assignment",
+        text: `Congratulations! You have been assigned a new task.`,
+        html:`<div>
+        <h1>Hello ${userData.firstName},</h1><br/>
+        <p>You have been assigned a new task with the following details.</p><br/>
+        <b>Title : </b>${findTask.taskname}<br/>
+        <b>Description : </b>${findTask.description}<br/>
+        <p>Update the status when the task is completed</p>
+        <hr/>
+        Regards,<br/>
+        "${userData.name}"
+        <div>`
+    }
+    let sendMail = await mailer(mailOption).catch((error) => {
+        return { error }
+    })
+    if (!sendMail || (sendMail && sendMail.error)) {
+        return { error: "mail cannot sent" }
+    }
+    return { data: `mail is send to ${params.email}` }
 }
 async function checkStatus(data) {
     let schema = joi.object({
